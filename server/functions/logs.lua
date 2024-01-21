@@ -11,20 +11,29 @@ local function GetIdentifier(source, identifier)
 end
 
 local function GetPlayerPicture(source)
-    if not GetPlayerName(source) then return false end
+    if not GetPlayerName(source) then
+        return false
+    end
 
     local steam = GetIdentifier(source, "steam")
     if not steam then
         return false
     end
+
     local url
-    PerformHttpRequest("https://steamcommunity.com/profiles/" .. tonumber(steam, 16), function(_, text, _) 
-        if not text then url = false end
-        url = text:match('<meta name="twitter:image" content="(.-)"')
+
+    PerformHttpRequest("https://steamcommunity.com/profiles/" .. tonumber(steam, 16), function(_, text, _)
+        if not text then
+            url = false
+        else
+            url = text:match('<meta name="twitter:image" content="(.-)"')
+        end
     end, "GET")
+
     while url == nil do
         Wait(0)
     end
+
     return url
 end
 
